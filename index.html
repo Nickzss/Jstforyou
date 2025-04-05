@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Una Propuesta Especial</title>
+    <title>Una Propuesta Única</title>
+    
     <style>
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Dancing Script', sans-serif;
         }
         
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Dancing Script', sans-serif;
             background-color: #f8e1e8;
             display: flex;
             flex-direction: column;
@@ -258,10 +263,11 @@
             const phrases = [
                 "No es una opción",
                 "¿Seguro?",
-                "Piénsalo mejor",
-                "¡Error!",
-                "Intenta otra vez",
-                "No puedes resistirte"
+                "Ajá no te hagas",
+                "Hmmm como que no funciona ehh",
+                "Intenta otra vez perooo de otra formaaa",
+                "No puedes resistirteeee",
+                "Yaaa no te hagas el dificilll"
             ];
             
             btnNo.textContent = phrases[Math.floor(Math.random() * phrases.length)];
