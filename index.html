@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Una Propuesta Especial</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8e1e8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+            touch-action: manipulation;
+        }
+        
+        .hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .heart {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: #ff6b81;
+            transform: rotate(45deg);
+            opacity: 0;
+            animation: fall 5s infinite linear;
+        }
+        
+        .heart:before,
+        .heart:after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: #ff6b81;
+            border-radius: 50%;
+        }
+        
+        .heart:before {
+            top: -7.5px;
+            left: 0;
+        }
+        
+        .heart:after {
+            top: 0;
+            left: -7.5px;
+        }
+        
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(45deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(45deg);
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            z-index: 1;
+            margin: 15px;
+        }
+        
+        h1 {
+            color: #ff4d6d;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #ff4d6d;
+        }
+        
+        p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .btn-yes {
+            background-color: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .btn-yes:hover, .btn-yes:active {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+        }
+        
+        .btn-no {
+            background-color: #ccc;
+            color: #666;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .result {
+            margin-top: 30px;
+            font-size: 1.5rem;
+            color: #ff4d6d;
+            display: none;
+        }
+        
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: none;
+            z-index: 2;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #f00;
+            opacity: 0;
+        }
+        
+        .gif-container {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .gif {
+            width: 100%;
+            max-width: 250px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts" id="hearts"></div>
+    
+    <div class="container">
+        <h1>Tengo una pregunta importante...</h1>
+        <p>Desde hace rato quería proponerte...algoooo</p>
+        
+        <div id="question-container">
+            <h2>Quieres ser mi novio hermoso por toda la eternidad???</h2>
+            
+            <div class="options">
+                <button class="btn-yes" id="btnYes">¡Sí, claro que quiero!</button>
+                <button class="btn-no" id="btnNo">No</button>
+            </div>
+        </div>
+        
+        <div class="result" id="result">
+            ¡Sabía que dirías que sí mi niño hermosooooooooooooooooo! ❤️
+        </div>
+        
+        <div class="gif-container" id="gifContainer">
+            <!-- Aquí debes reemplazar la URL con tu GIF real -->
+            <img class="gif" src="https://i.pinimg.com/originals/7b/e9/27/7be927b090b5a297dd3a0966da0df623.gif" alt="Celebración" />
+        </div>
+    </div>
+    
+    <div class="celebration" id="celebration"></div>
+    
+    <script>
+        // Crear corazones cayendo
+        const heartsContainer = document.getElementById('hearts');
+        for (let i = 0; i < 15; i++) {
+            createHeart();
+        }
+        
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            heart.style.opacity = Math.random() * 0.5 + 0.5;
+            heart.style.transform = `scale(${Math.random() * 0.5 + 0.5}) rotate(45deg)`;
+            heartsContainer.appendChild(heart);
+        }
+        
+        // Botón No que huye
+        const btnNo = document.getElementById('btnNo');
+        const container = document.querySelector('.container');
+        
+        // Manejar tanto hover como touch en móviles
+        btnNo.addEventListener('mouseover', moveButton);
+        btnNo.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            moveButton();
+        });
+        
+        function moveButton() {
+            // Obtener dimensiones actualizadas del contenedor
+            const containerRect = container.getBoundingClientRect();
+            const btnRect = btnNo.getBoundingClientRect();
+            
+            // Calcular límites dentro del contenedor con margen de seguridad
+            const maxX = containerRect.width - btnRect.width - 20;
+            const maxY = containerRect.height - btnRect.height - 20;
+            
+            // Posición aleatoria dentro de los límites del contenedor
+            const randomX = Math.max(10, Math.min(maxX, Math.random() * maxX));
+            const randomY = Math.max(10, Math.min(maxY, Math.random() * maxY));
+            
+            btnNo.style.position = 'absolute';
+            btnNo.style.left = randomX + 'px';
+            btnNo.style.top = randomY + 'px';
+            
+            // Cambiar texto ocasionalmente
+            const phrases = [
+                "No es una opción",
+                "¿Seguro?",
+                "Piénsalo mejor",
+                "¡Error!",
+                "Intenta otra vez",
+                "No puedes resistirte"
+            ];
+            
+            btnNo.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+            
+            // Hacer más pequeño el botón gradualmente
+            const currentSize = parseFloat(window.getComputedStyle(btnNo).fontSize);
+            if (currentSize > 8) {  // No permitir que sea demasiado pequeño
+                btnNo.style.fontSize = (currentSize - 0.5) + 'px';
+            }
+        }
+        
+        // Botón Sí que acepta
+        const btnYes = document.getElementById('btnYes');
+        const questionContainer = document.getElementById('question-container');
+        const result = document.getElementById('result');
+        const gifContainer = document.getElementById('gifContainer');
+        
+        btnYes.addEventListener('click', acceptProposal);
+        btnYes.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            acceptProposal();
+        });
+        
+        function acceptProposal() {
+            questionContainer.style.display = 'none';
+            result.style.display = 'block';
+            gifContainer.style.display = 'block';
+            
+            showCelebration();
+            
+            // Hacer que el botón No desaparezca completamente
+            btnNo.style.display = 'none';
+        }
+        
+        // Click en Sí cuando presionan cualquier tecla y cuando tocan la pantalla
+        document.addEventListener('keydown', acceptProposal);
+        document.addEventListener('touchstart', function(e) {
+            if (e.target !== btnNo && e.target !== btnYes) {
+                acceptProposal();
+            }
+        }, {passive: true});
+        
+        // Celebración con confeti
+        function showCelebration() {
+            const celebration = document.getElementById('celebration');
+            celebration.style.display = 'block';
+            
+            // Menos confeti en móvil para mejor rendimiento
+            for (let i = 0; i < 60; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Colores aleatorios
+                const colors = ['#ff4d6d', '#ff8fa3', '#ffc2d1', '#ffe5ec', '#ffb6c1', '#ff69b4'];
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Posición y tamaño aleatorios
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.width = Math.random() * 8 + 4 + 'px';
+                confetti.style.height = Math.random() * 8 + 4 + 'px';
+                
+                // Animación
+                confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                confetti.style.opacity = '1';
+                confetti.style.transform = `translateY(-50px) rotate(${Math.random() * 360}deg)`;
+                
+                celebration.appendChild(confetti);
+            }
+        }
+    </script>
+</body>
+</html>
